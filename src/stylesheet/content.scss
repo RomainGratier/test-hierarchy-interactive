@@ -1,0 +1,45 @@
+.child {
+  display: inline-block;
+  padding: 0.5rem;
+  border: 1px rgba(0, 0, 0, 0.05) solid;
+  margin: 0.25rem;
+  border-radius: 0.3rem;
+  transition: 0.2s;
+  float: left;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.03);
+    box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.05);
+  }
+
+  &.sortable-chosen {
+    background: $primary;
+  }
+}
+
+.children-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin: 0.5rem 0;
+  flex-wrap: wrap;
+  margin: 0.5rem -0.25rem 0 -0.25rem;
+}
+
+.handle {
+  padding: 0.5rem;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.3);
+
+  &:hover {
+    color: rgba(0, 0, 0, 0.5)
+  }
+}
+
+hr {
+  border: none;
+  background: #f1f1f1;
+  height: 1px;
+  margin: 1.5rem 0;
+}
