@@ -1,35 +1,20 @@
-import React, { Component, useState } from "react";
+import React, { Component, useEffect, useState } from "react";
 import TreeBuilder from "./hierarchyBuilder/hierarchyBuilder";
 import createNode from "./hierarchyBuilder/node";
-import { Input, Tooltip } from '@material-ui/core'; 
+import { Input, Button, Tooltip } from '@material-ui/core'
 
 export default App;
 
 function App() {
-  const eraseNodeRec = (parentTree, id) => {
-    parentTree.children.map((child) => {
-      if (child.id !== id) {
-        eraseNodeRec(child, id);
-      }
-      else {
-        parentTree.children = parentTree.children.filter(item => item.id !== id);
-        return;
-      }
-    })
+
+  const firstNode = createNode({}); // AKA Tree
+  const [children, setChildren] = useState([firstNode]);
+
+  function logTree() {
+    console.log({ children: firstNode.children });
+    // Do something.
   }
 
-  const [tree, setTree] = useState(createNode({}));
-
-  const AddNewNode = (newTree) => {
-    setTree(newTree);
-    // console.log(newTree)
-    // setTree({ ...tree, children: [...newChildren]});
-  }
-
-  const RemoveNode = (prevTree, id) => {
-    eraseNodeRec(prevTree, id);
-    setTree(prevTree)
-  }
   return (
     <div>
       <h1>Arborescence intéractive</h1>
@@ -42,11 +27,11 @@ function App() {
         Vous pouvez créer une base d'arborescence depuit un JSON <Input className="ml-1 input-big"></Input>
       </div>
       <div className="children-wrapper">
-        <TreeBuilder id={tree.id} name={tree.name} children={tree.children} treeComponentChildren={tree.children} tree={tree} onAdd={AddNewNode} onDelete={RemoveNode}/>
+        <TreeBuilder parentChildren={children} setParentChildren={setChildren} node={firstNode} /* treeComponentChildren={tree.children} tree={tree} onDelete={RemoveNode} *//>
       </div>
       <p> JSON result </p>
       <Tooltip title="test">
-        <pre></pre>
+        <Button onClick={ logTree }>Log Tree</Button>
       </Tooltip>
       <hr></hr>
     </div>

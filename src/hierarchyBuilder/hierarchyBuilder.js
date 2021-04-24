@@ -6,27 +6,23 @@ import Draggable, { DraggableCore } from "react-draggable";
 
 export default TreeBuilder;
 
-function TreeBuilder(props) {
-  const addChildToTree = (tree, newChildren) => {
-    return;
-  };
+function TreeBuilder({ parentChildren, setParentChildren, node }) {
 
   const [children, setChildren] = useState([]);
 
   const addChild = () => {
-    const node = createNode({});
-    setChildren(children => [...children, node]);
-    addChildToTree(props.tree, children)
-    props.onAdd(newTree)
+    const childNode = createNode({});
+    node.children.push(childNode);
+    setChildren([...children, childNode]);
   }
 
-  const treeRemoveParent = (id) => {
-    props.onDelete(props.tree, id);
+  const treeRemoveParent = () => {
+    setParentChildren(parentChildren.filter(({ id }) => id !== node.id));
   }
 
-  // useEffect(() => {
-  //   ;
-  // }, [children])
+  useEffect(() => {
+    node.children = node.children.filter(child => children.find(({ id }) => id === child.id));
+  })
 
   return (
     <div className="child">
@@ -46,20 +42,18 @@ function TreeBuilder(props) {
       <Tooltip
         title="test">
         <Button className="ml-1" variant="contained" color="primary" onClick={addChild}>
-          Add {props.id}
+          Add {node.id}
         </Button>
       </Tooltip>
       <Tooltip
         title="test">
-        <Button className="ml-1" variant="contained" color="secondary" onClick={() => { treeRemoveParent(props.id) }}>
-          Delete {props.id}
+        <Button className="ml-1" variant="contained" color="secondary" onClick={ treeRemoveParent }>
+          Delete {node.id}
         </Button>
       </Tooltip>
       <div
         className="children-wrapper">
-        {children && children.map((item) => {
-          return <TreeBuilder id={item.id} name={item.name} children={item.children} tree={props.tree} onAdd={props.onAdd} onDelete={props.onDelete} />;
-        })}
+        { children.map((item, index) => <TreeBuilder parentChildren={children} setParentChildren={setChildren}  node={ item } key={ `tree-${node.id}-child-${index + 1}` } /> ) }
       </div>
     </div>
   );
