@@ -1,38 +1,54 @@
-import React, { Component } from "react";
-import Instance from "./hierarchyBuilder/hierarchyBuilder";
-import { Child } from "./hierarchyBuilder/child";
-import { Tooltip, Input } from "element-react";
+import React, { Component, useState } from "react";
+import TreeBuilder from "./hierarchyBuilder/hierarchyBuilder";
+import createNode from "./hierarchyBuilder/node";
+import { Input, Tooltip } from '@material-ui/core'; 
 
 export default App;
+
 function App() {
+  const eraseNodeRec = (parentTree, id) => {
+    parentTree.children.map((child) => {
+      if (child.id !== id) {
+        eraseNodeRec(child, id);
+      }
+      else {
+        parentTree.children = parentTree.children.filter(item => item.id !== id);
+        return;
+      }
+    })
+  }
+
+  const [tree, setTree] = useState(createNode({}));
+
+  const AddNewNode = (newTree) => {
+    setTree(newTree);
+    // console.log(newTree)
+    // setTree({ ...tree, children: [...newChildren]});
+  }
+
+  const RemoveNode = (prevTree, id) => {
+    eraseNodeRec(prevTree, id);
+    setTree(prevTree)
+  }
   return (
     <div>
-      <h1>Tree data builder</h1>
+      <h1>Arborescence intéractive</h1>
       <p>
         {" "}
-        Build data trees optimized for d3 structure quickly with this app!{" "}
+        {" "}
       </p>
       <div className="text-muted">
         {" "}
-        You can pass an existing JSON config <Input></Input>
+        Vous pouvez créer une base d'arborescence depuit un JSON <Input className="ml-1 input-big"></Input>
       </div>
       <div className="children-wrapper">
-        <Instance></Instance>
+        <TreeBuilder id={tree.id} name={tree.name} children={tree.children} treeComponentChildren={tree.children} tree={tree} onAdd={AddNewNode} onDelete={RemoveNode}/>
       </div>
       <p> JSON result </p>
-      <Tooltip content="Click to copy to clipboard">
+      <Tooltip title="test">
         <pre></pre>
       </Tooltip>
       <hr></hr>
-      <div className="text-center">
-        <a
-          href="https://github.com/DJanoskova/Vue.js-Tree-Data-Builder"
-          target="_blank"
-        >
-          {" "}
-          https://github.com/DJanoskova/Vue.js-Tree-Data-Builder{" "}
-        </a>
-      </div>
     </div>
   );
 }
