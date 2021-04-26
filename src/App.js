@@ -18,18 +18,12 @@ function App() {
   return (
     <div>
       <h1>Arborescence intéractive</h1>
-      <p>
-        {" "}
-        {" "}
-      </p>
       <div className="text-muted">
-        {" "}
         Vous pouvez créer une base d'arborescence depuit un JSON <Input className="ml-1 input-big"></Input>
       </div>
       <div className="children-wrapper">
-        <TreeBuilder parentChildren={children} setParentChildren={setChildren} node={firstNode} /* treeComponentChildren={tree.children} tree={tree} onDelete={RemoveNode} *//>
+        <TreeBuilder parentChildren={children} setParentChildren={setChildren} node={firstNode} />
       </div>
-      <p> JSON result </p>
       <Tooltip title="test">
         <Button onClick={ logTree }>Log Tree</Button>
       </Tooltip>
