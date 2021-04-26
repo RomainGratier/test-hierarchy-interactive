@@ -10,22 +10,19 @@ function App() {
   const firstNode = createNode({}); // AKA Tree
   const [children, setChildren] = useState([firstNode]);
 
-  function logTree() {
-    console.log({ children: firstNode.children });
+  function Save() {
+    console.log( firstNode );
     // Do something.
   }
 
   return (
     <div>
       <h1>Arborescence intéractive</h1>
-      <div className="text-muted">
-        Vous pouvez créer une base d'arborescence depuit un JSON <Input className="ml-1 input-big"></Input>
-      </div>
       <div className="children-wrapper">
         <TreeBuilder parentChildren={children} setParentChildren={setChildren} node={firstNode} />
       </div>
       <Tooltip title="test">
-        <Button onClick={ logTree }>Log Tree</Button>
+        <Button onClick={ Save }>Save</Button>
       </Tooltip>
       <hr></hr>
     </div>

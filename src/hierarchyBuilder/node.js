@@ -1,9 +1,9 @@
 export default node; 
 
-export function node({ name = '', value = '', id = new Date().getTime() }) {
+export function node({ department = '', email = '', id = new Date().getTime() }) {
   return {
-    name,
-    value,
+    department,
+    email,
     id,
     children: []
   }
