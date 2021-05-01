@@ -1,65 +1,67 @@
 import React, { Component, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import createNode from "./node";
-import { Input, Button, Tooltip } from '@material-ui/core'
+import { Input, Button, Tooltip, TextField } from '@material-ui/core'
 import Draggable, { DraggableCore } from "react-draggable";
 
 export default TreeBuilder;
 
-function TreeBuilder(props) {
-  const addChildToTree = (tree, newChildren) => {
-    return;
-  };
-
+function TreeBuilder({ parentChildren, setParentChildren, node }) {
   const [children, setChildren] = useState([]);
 
   const addChild = () => {
-    const node = createNode({});
-    setChildren(children => [...children, node]);
-    addChildToTree(props.tree, children)
-    props.onAdd(newTree)
+    const childNode = createNode({});
+    node.children.push(childNode);
+    setChildren([...children, childNode]);
   }
 
-  const treeRemoveParent = (id) => {
-    props.onDelete(props.tree, id);
+  const treeRemoveParent = () => {
+    setParentChildren(parentChildren.filter(({ id }) => id !== node.id));
   }
 
-  // useEffect(() => {
-  //   ;
-  // }, [children])
+  const updateNode = event => {
+    const { target: { value, name } } = event || {}
+    if (!name) return;
+    node[name] = value;
+  }
+
+  useEffect(() => {
+    node.children = node.children.filter(child => nodeExist(child.id));
+    function nodeExist(nodeId) {
+      return children.find(child => child.id === nodeId);
+    }
+  })
 
   return (
     <div className="child">
       <span className="handle mr-1">
         <i className="el-icon-rank"></i>
       </span>
-      <Input
-        placeholder="Département"
-        className="input">
-
+    
+      <Tooltip title="Ajouter un département">
+      <Input placeholder="Département" className="input" name="department" label="department" variant="outlined" onChange={updateNode}>
       </Input>
-      <Input
-        placeholder="Email"
-        className="input-small ml-1">
+      </Tooltip>
 
+      <Tooltip title="Ajouter un Email">
+      <Input placeholder="Email" className="input-small ml-1" name="email" label="email" variant="outlined" onChange={updateNode}>
       </Input>
-      <Tooltip
-        title="test">
-        <Button className="ml-1" variant="contained" color="primary" onClick={addChild}>
-          Add {props.id}
+      </Tooltip>
+
+      <Tooltip title="Ajouter">
+        <Button variant="contained" color="primary" onClick={addChild}>
+          Add
         </Button>
       </Tooltip>
-      <Tooltip
-        title="test">
-        <Button className="ml-1" variant="contained" color="secondary" onClick={() => { treeRemoveParent(props.id) }}>
-          Delete {props.id}
+
+      <Tooltip title="Enlever">
+        <Button variant="contained" color="secondary" onClick={ treeRemoveParent }>
+          Delete
         </Button>
       </Tooltip>
-      <div
-        className="children-wrapper">
-        {children && children.map((item) => {
-          return <TreeBuilder id={item.id} name={item.name} children={item.children} tree={props.tree} onAdd={props.onAdd} onDelete={props.onDelete} />;
-        })}
+
+      <div className="children-wrapper">
+        { children.map((item, index) => <TreeBuilder parentChildren={children} setParentChildren={setChildren}  node={ item } key={ `tree-${node.id}-child-${index + 1}` } /> ) }
       </div>
     </div>
   );
